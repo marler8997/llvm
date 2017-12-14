@@ -19,7 +19,7 @@ public:
   ARMAsmBackendWinCOFF(const Target &T, const Triple &TheTriple)
       : ARMAsmBackend(T, TheTriple, true) {}
   MCObjectWriter *createObjectWriter(raw_pwrite_stream &OS) const override {
-    return createARMWinCOFFObjectWriter(OS, /*Is64Bit=*/false);
+    return createARMWinCOFFObjectWriter(OS, /*Is64Bit=*/false, getIsWinNT());
   }
 };
 }

@@ -189,6 +189,7 @@ StringRef Triple::getOSTypeName(OSType Kind) {
   case OpenBSD: return "openbsd";
   case Solaris: return "solaris";
   case Win32: return "windows";
+  case WinCE: return "wince";
   case Haiku: return "haiku";
   case Minix: return "minix";
   case RTEMS: return "rtems";
@@ -472,6 +473,7 @@ static Triple::OSType parseOS(StringRef OSName) {
     .StartsWith("solaris", Triple::Solaris)
     .StartsWith("win32", Triple::Win32)
     .StartsWith("windows", Triple::Win32)
+    .StartsWith("wince", Triple::WinCE)
     .StartsWith("haiku", Triple::Haiku)
     .StartsWith("minix", Triple::Minix)
     .StartsWith("rtems", Triple::RTEMS)
@@ -1537,6 +1539,8 @@ StringRef Triple::getARMCPUForArch(StringRef MArch) const {
   case llvm::Triple::Win32:
     // FIXME: this is invalid for WindowsCE
     return "cortex-a9";
+  case llvm::Triple::WinCE:
+    return "cortex-a8";
   case llvm::Triple::MacOSX:
   case llvm::Triple::IOS:
   case llvm::Triple::WatchOS:

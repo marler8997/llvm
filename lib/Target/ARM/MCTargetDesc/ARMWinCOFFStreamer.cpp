@@ -25,7 +25,13 @@ public:
 
 void ARMWinCOFFStreamer::EmitAssemblerFlag(MCAssemblerFlag Flag) {
   switch (Flag) {
-  default: llvm_unreachable("not implemented");
+  default:
+	  llvm::errs() << "ARMWinCOFFStreamer.cpp: EmitAssemberFlag (" << Flag << ") not implemented\n";
+	  llvm_unreachable("not implemented");
+  case MCAF_Code32:
+	  llvm::errs() << "ARMWinCOFFStreamer.cpp: EmitAssemberFlag (MCAF_Code32) ignoring\n";
+	  //throw "ARMWinCOFFStreamer::EmitAssemblerFlag GetStackTrace";
+	  break;
   case MCAF_SyntaxUnified:
   case MCAF_Code16:
     break;

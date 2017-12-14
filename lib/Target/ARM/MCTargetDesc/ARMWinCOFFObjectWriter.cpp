@@ -26,8 +26,8 @@ namespace {
 
 class ARMWinCOFFObjectWriter : public MCWinCOFFObjectTargetWriter {
 public:
-  ARMWinCOFFObjectWriter(bool Is64Bit)
-    : MCWinCOFFObjectTargetWriter(COFF::IMAGE_FILE_MACHINE_ARMNT) {
+  ARMWinCOFFObjectWriter(bool Is64Bit, bool isWinNT)
+    : MCWinCOFFObjectTargetWriter(isWinNT ? COFF::IMAGE_FILE_MACHINE_ARMNT : COFF::IMAGE_FILE_MACHINE_ARM) {
     assert(!Is64Bit && "AArch64 support not yet implemented");
   }
 
@@ -47,7 +47,7 @@ unsigned ARMWinCOFFObjectWriter::getRelocType(MCContext &Ctx,
                                               const MCFixup &Fixup,
                                               bool IsCrossSection,
                                               const MCAsmBackend &MAB) const {
-  assert(getMachine() == COFF::IMAGE_FILE_MACHINE_ARMNT &&
+  assert((getMachine() == COFF::IMAGE_FILE_MACHINE_ARM || getMachine() == COFF::IMAGE_FILE_MACHINE_ARMNT) &&
          "AArch64 support not yet implemented");
 
   MCSymbolRefExpr::VariantKind Modifier =
@@ -56,6 +56,8 @@ unsigned ARMWinCOFFObjectWriter::getRelocType(MCContext &Ctx,
   switch (static_cast<unsigned>(Fixup.getKind())) {
   default: {
     const MCFixupKindInfo &Info = MAB.getFixupKindInfo(Fixup.getKind());
+	llvm::errs() << "ARMWinCOFFObjectWriter::getRelocType, unsupported relocation type: " << Fixup.getKind() << "\n";
+	throw "getRelocType";
     report_fatal_error(Twine("unsupported relocation type: ") + Info.Name);
   }
   case FK_Data_4:
@@ -80,6 +82,9 @@ unsigned ARMWinCOFFObjectWriter::getRelocType(MCContext &Ctx,
     return COFF::IMAGE_REL_ARM_BLX23T;
   case ARM::fixup_t2_movw_lo16:
   case ARM::fixup_t2_movt_hi16:
+	  if (getMachine() == COFF::IMAGE_FILE_MACHINE_ARM) {
+		  return COFF::IMAGE_REL_ARM_MOV32T;
+	  }
     return COFF::IMAGE_REL_ARM_MOV32T;
   }
 }
@@ -91,8 +96,8 @@ bool ARMWinCOFFObjectWriter::recordRelocation(const MCFixup &Fixup) const {
 namespace llvm {
 
 MCObjectWriter *createARMWinCOFFObjectWriter(raw_pwrite_stream &OS,
-                                             bool Is64Bit) {
-  MCWinCOFFObjectTargetWriter *MOTW = new ARMWinCOFFObjectWriter(Is64Bit);
+                                             bool Is64Bit, bool isWinNT) {
+  MCWinCOFFObjectTargetWriter *MOTW = new ARMWinCOFFObjectWriter(Is64Bit, isWinNT);
   return createWinCOFFObjectWriter(MOTW, OS);
 }
 

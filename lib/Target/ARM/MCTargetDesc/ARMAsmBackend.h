@@ -22,11 +22,12 @@ class ARMAsmBackend : public MCAsmBackend {
   const MCSubtargetInfo *STI;
   bool isThumbMode;    // Currently emitting Thumb code.
   bool IsLittleEndian; // Big or little endian.
+  bool isWinNT;
 public:
   ARMAsmBackend(const Target &T, const Triple &TT, bool IsLittle)
       : MCAsmBackend(), STI(ARM_MC::createARMMCSubtargetInfo(TT, "", "")),
         isThumbMode(TT.getArchName().startswith("thumb")),
-        IsLittleEndian(IsLittle) {}
+        IsLittleEndian(IsLittle), isWinNT(TT.getOS() == Triple::Win32) {}
 
   ~ARMAsmBackend() override { delete STI; }
 
@@ -72,6 +73,7 @@ public:
   bool isThumb() const { return isThumbMode; }
   void setIsThumb(bool it) { isThumbMode = it; }
   bool isLittle() const { return IsLittleEndian; }
+  bool getIsWinNT() const { return isWinNT; }
 };
 } // end namespace llvm
 

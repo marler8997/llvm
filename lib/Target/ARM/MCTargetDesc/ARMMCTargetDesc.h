@@ -108,7 +108,8 @@ MCObjectWriter *createARMMachObjectWriter(raw_pwrite_stream &OS, bool Is64Bit,
 
 /// Construct an ARM PE/COFF object writer.
 MCObjectWriter *createARMWinCOFFObjectWriter(raw_pwrite_stream &OS,
-                                             bool Is64Bit);
+                                             bool Is64Bit,
+                                             bool isWinNT);
 
 /// Construct ARM Mach-O relocation info.
 MCRelocationInfo *createARMMachORelocationInfo(MCContext &Ctx);

@@ -798,7 +798,7 @@ StringRef llvm::ARM::computeDefaultTargetABI(const Triple &TT, StringRef CPU) {
     if (TT.isWatchABI())
       return "aapcs16";
     return "apcs-gnu";
-  } else if (TT.isOSWindows())
+  } else if (TT.getOS() == Triple::Win32)
     // FIXME: this is invalid for WindowsCE.
     return "aapcs";
 

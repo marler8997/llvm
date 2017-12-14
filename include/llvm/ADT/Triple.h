@@ -162,6 +162,7 @@ public:
     OpenBSD,
     Solaris,
     Win32,
+    WinCE,
     Haiku,
     Minix,
     RTEMS,
@@ -549,7 +550,7 @@ public:
 
   /// Tests whether the OS is Windows.
   bool isOSWindows() const {
-    return getOS() == Triple::Win32;
+    return getOS() == Triple::Win32 || getOS() == Triple::WinCE;
   }
 
   /// Tests whether the OS is NaCl (Native Client)

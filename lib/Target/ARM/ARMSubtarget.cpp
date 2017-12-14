@@ -246,8 +246,7 @@ void ARMSubtarget::initSubtargetFeatures(StringRef CPU, StringRef FS) {
   // Initialize scheduling itinerary for the specified CPU.
   InstrItins = getInstrItineraryForCPU(CPUString);
 
-  // FIXME: this is invalid for WindowsCE
-  if (isTargetWindows())
+  if (isTargetBigWindows())
     NoARM = true;
 
   if (isAAPCS_ABI())
